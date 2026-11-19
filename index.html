@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Completo: Did You Have a Good Weekend?</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        h1 { color: #1d4ed8; margin-bottom: 5px; }
+        .subtitle { color: #64748b; margin-top: 0; margin-bottom: 20px; }
+        .student-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        .student-box input {
+            flex: 1;
+            min-width: 240px;
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+        .section-title {
+            background: #eff6ff;
+            border-left: 5px solid #1d4ed8;
+            padding: 10px 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-top: 30px;
+            border-radius: 0 6px 6px 0;
+        }
+        .subsection-title {
+            font-size: 1.05em;
+            font-weight: bold;
+            color: #0f172a;
+            margin: 18px 0 10px;
+        }
+        .card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px;
+            margin: 14px 0;
+            background: #f8fafc;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: #1d4ed8;
+            color: white;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+        .badge-listen {
+            background: #0d9488;
+            color: white;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+        .score-pill {
+            background: #e2e8f0;
+            color: #334155;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+        .target-text {
+            font-size: 1.05em;
+            background: #ffffff;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+            margin-bottom: 12px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        button {
+            border: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.92em;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.45; cursor: not-allowed; }
+        .btn-rec { background: #dc2626; color: white; }
+        .btn-stop { background: #d97706; color: white; }
+        .btn-play { background: #0d9488; color: white; }
+        .btn-slow { background: #475569; color: white; }
+        .btn-pause { background: #e11d48; color: white; }
+        .btn-submit {
+            background: #1d4ed8;
+            color: white;
+            padding: 15px 26px;
+            font-size: 1.05em;
+            margin-top: 24px;
+            width: 100%;
+        }
+        .live-status { font-size: 0.9em; font-weight: bold; color: #475569; }
+        .recording-active { color: #dc2626; }
+        .feedback-box {
+            margin-top: 12px;
+            padding: 12px;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+        .word-ok { color: #15803d; font-weight: 600; background: #dcfce7; padding: 1px 4px; border-radius: 4px; }
+        .word-miss { color: #b91c1c; font-weight: 600; background: #fee2e2; padding: 1px 4px; border-radius: 4px; text-decoration: underline; }
+        .heard-text { font-size: 0.88em; color: #64748b; margin-top: 8px; }
+
+        .dictation-input {
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 10px;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.96em;
+            background: #ffffff;
+        }
+        .question-row {
+            display: flex;
+            flex-direction: column;
+            padding: 14px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            gap: 8px;
+        }
+        .question-row:last-child { border-bottom: none; }
+        select {
+            padding: 9px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.95em;
+            background: white;
+            max-width: 540px;
+        }
+        .final-summary {
+            margin-top: 25px;
+            padding: 24px;
+            border-radius: 12px;
+            background: #f0fdf4;
+            border: 2px solid #16a34a;
+            display: none;
+        }
+        .grade-banner {
+            background: #ffffff;
+            border: 2px solid #1d4ed8;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .grade-number {
+            font-size: 2.6em;
+            font-weight: 800;
+            color: #1d4ed8;
+            line-height: 1.1;
+        }
+        .grade-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .breakdown-item {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+        }
+        .review-section {
+            margin-top: 15px;
+            background: #ffffff;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .review-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .review-word-btn {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.92em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .review-word-btn:hover { background: #fecaca; }
+        .perfect-msg { color: #15803d; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Did You Have a Good Weekend?</h1>
+    <p class="subtitle">Parte 1: Pronunciación de los textos · Parte 2: Preguntas sobre la lectura · Parte 3: Listening (Dictado y Diálogos).</p>
+
+    <div class="student-box">
+        <label for="studentName"><strong>Nombre del estudiante:</strong></label>
+        <input type="text" id="studentName" placeholder="Escribe tu nombre completo aquí...">
+    </div>
+
+    <!-- PARTE 1: PRONUNCIACIÓN -->
+    <div class="section-title">Parte 1: Lectura y Pronunciación — Social Media Posts (3.5 puntos)</div>
+    <div id="speaking-container"></div>
+
+    <!-- PARTE 2: PREGUNTAS SOBRE LA LECTURA -->
+    <div class="section-title">Parte 2: Read the social media posts. Then correct these sentences. (3.0 puntos)</div>
+    <div class="card" id="reading-container"></div>
+
+    <!-- PARTE 3: LISTENING -->
+    <div class="section-title">Parte 3: Listening — Dictation y Diálogos Cortos (3.5 puntos)</div>
+
+    <div class="subsection-title">3A. Escucha y escribe exactamente cada oración</div>
+    <div id="dictation-container"></div>
+
+    <div class="subsection-title">3B. Escucha cada conversación y responde la pregunta</div>
+    <div class="card" id="dialogues-container"></div>
+
+    <button class="btn-submit" onclick="finishExam()">Finalizar Evaluación y Calcular Nota (0 - 10)</button>
+
+    <div class="final-summary" id="finalSummary"></div>
+</div>
+
+<script>
+    const WEIGHT_SPEAKING = 3.5;
+    const WEIGHT_READING = 3.0;
+    const WEIGHT_LISTENING = 3.5;
+
+    const readingPassages = [
+        {
+            id: 1,
+            title: "1. Nick Bond",
+            text: "I just had the worst weekend ever! It was my best friend Pete's wedding and my car broke down on the drive. I was on a quiet road and suddenly there was a bang. Then the car just didn't move! I missed the wedding and came home on the back of a truck."
+        },
+        {
+            id: 2,
+            title: "2. Jessie Taylor",
+            text: "Hey guys! Guess what? I just got back from my first ever parasailing class! It was amazing! I traveled to a town by the ocean and met my instructor. We went high up above the ocean where people jump off the rocks. It was kind of scary but so exciting. Here's a picture of me. See? That's me!"
+        },
+        {
+            id: 3,
+            title: "3. Armando Torres",
+            text: "So on Saturday morning I did chores at home. You know, laundry and stuff. Then I went grocery shopping because well, because there was no food in the house! Sunday morning, I fixed my bike, walked the dog, called my mom, and made lunch. Then I wrote a report for work, cleaned the house, and went to bed."
+        },
+        {
+            id: 4,
+            title: "4. Juliette Blum",
+            text: "Wow. What an awesome weekend. I went running in the park on Saturday evening, and I met someone I knew from school 10 years ago. It was so cool. Her name is Marie and we always hung out together when we were kids. She's married now and has a baby!"
+        }
+    ];
+
+    const comprehensionQuestions = [
+        {
+            q: "1. Nick got married.",
+            options: [
+                "Nick's best friend got married.",
+                "Nick got married on Saturday.",
+                "No correction needed."
+            ],
+            answer: "Nick's best friend got married."
+        },
+        {
+            q: "2. On the way to the wedding, Nick's truck broke down.",
+            options: [
+                "On the way to the wedding, Nick's car broke down.",
+                "Nick's truck broke down on the way home.",
+                "No correction needed."
+            ],
+            answer: "On the way to the wedding, Nick's car broke down."
+        },
+        {
+            q: "3. Jessie's parasailing class was terrible.",
+            options: [
+                "Jessie's parasailing class was amazing.",
+                "Jessie didn't like the parasailing class.",
+                "No correction needed."
+            ],
+            answer: "Jessie's parasailing class was amazing."
+        },
+        {
+            q: "4. It was Jessie's second parasailing class.",
+            options: [
+                "It was Jessie's first ever parasailing class.",
+                "It was Jessie's third parasailing class.",
+                "No correction needed."
+            ],
+            answer: "It was Jessie's first ever parasailing class."
+        },
+        {
+            q: "5. Armando watched TV on Saturday morning.",
+            options: [
+                "Armando did chores at home on Saturday morning.",
+                "Armando went to the park on Saturday morning.",
+                "No correction needed."
+            ],
+            answer: "Armando did chores at home on Saturday morning."
+        },
+        {
+            q: "6. Armando fixed his car and walked his dog.",
+            options: [
+                "Armando fixed his bike and walked his dog.",
+                "Armando fixed his bike and washed his car.",
+                "No correction needed."
+            ],
+            answer: "Armando fixed his bike and walked his dog."
+        },
+        {
+            q: "7. Juliette went running on Sunday morning.",
+            options: [
+                "Juliette went running on Saturday evening.",
+                "Juliette went running on Sunday evening.",
+                "No correction needed."
+            ],
+            answer: "Juliette went running on Saturday evening."
+        },
+        {
+            q: "8. Juliette is married and has a baby.",
+            options: [
+                "No correction needed (Marie is married and has a baby).",
+                "Juliette is married and has two babies.",
+                "Juliette is single and has no kids."
+            ],
+            answer: "No correction needed (Marie is married and has a baby)."
+        }
+    ];
+
+    const dictationSentences = [
+        { id: 1, text: "Last Saturday, I woke up late and didn't have breakfast at home." },
+        { id: 2, text: "I met my friend Daniel at a small coffee shop near the park." },
+        { id: 3, text: "We talked for two hours about work and music." },
+        { id: 4, text: "In the afternoon, it started to rain, so we went to the movies." },
+        { id: 5, text: "We watched a funny comedy and ate popcorn." },
+        { id: 6, text: "I got home around eight and ordered dinner." }
+    ];
+
+    const listeningDialogues = [
+        {
+            id: 1,
+            title: "Diálogo 1 (Carla y Mateo)",
+            turns: [
+                { speaker: "Carla", line: "Hey Mateo, how was your weekend? Did you go to the beach?" },
+                { speaker: "Mateo", line: "No, I wanted to go, but my car had a flat tire on Saturday morning. I stayed home and cleaned my room instead." },
+                { speaker: "Carla", line: "Oh, that's too bad. What about Sunday?" },
+                { speaker: "Mateo", line: "On Sunday, my brother cooked pasta for lunch and we played video games." }
+            ],
+            question: "1. Why didn't Carla go to the beach on Saturday?",
+            options: [
+                "It rained all day.",
+                "Her car had a flat tire.",
+                "She had to work."
+            ],
+            answer: "Her car had a flat tire."
+        },
+        {
+            id: 2,
+            title: "Diálogo 2 (Leo, Sofía y Andrés)",
+            turns: [
+                { speaker: "Leo", line: "Did you enjoy the concert last night, Sofía?" },
+                { speaker: "Sofía", line: "Yes, it was awesome! The tickets were a little expensive, but the band played for almost three hours." },
+                { speaker: "Andrés", line: "Hey guys! Did you get good seats? I heard it was super crowded." },
+                { speaker: "Leo", line: "We did! Sofía and I arrived thirty minutes early, so we sat right near the front." }
+            ],
+            question: "2. How did Leo and Sofía get good seats?",
+            options: [
+                "They paid extra money.",
+                "They arrived thirty minutes early.",
+                "A friend saved them."
+            ],
+            answer: "They arrived thirty minutes early."
+        },
+        {
+            id: 3,
+            title: "Diálogo 3 (Sam y Val)",
+            turns: [
+                { speaker: "Sam", line: "Hi Val, you look tired. Did you sleep well last night?" },
+                { speaker: "Val", line: "Not really. I studied for my English quiz until midnight, and then my neighbors had a loud party until two in the morning." },
+                { speaker: "Sam", line: "Oh no! Are you going to take a nap later?" },
+                { speaker: "Val", line: "I can't. I have a meeting at three, so I'm drinking strong coffee right now." }
+            ],
+            question: "3. Why didn't Sam sleep well?",
+            options: [
+                "He drank too much coffee.",
+                "His neighbors had a loud party.",
+                "He worked a night shift."
+            ],
+            answer: "His neighbors had a loud party."
+        },
+        {
+            id: 4,
+            title: "Diálogo 4 (Mia y Elena)",
+            turns: [
+                { speaker: "Mia", line: "How was your trip to the mountains, Elena?" },
+                { speaker: "Elena", line: "It was great, except I forgot my jacket! It got really cold in the evening." },
+                { speaker: "Mia", line: "Did you buy one there?" },
+                { speaker: "Elena", line: "No, I borrowed a sweater from my friend Diego. Everything else was perfect—we took lots of photos." }
+            ],
+            question: "4. What did Mia do when she got cold in the evening?",
+            options: [
+                "She bought a new jacket.",
+                "She went back to the hotel.",
+                "She borrowed a sweater from Elena."
+            ],
+            answer: "She borrowed a sweater from Elena."
+        }
+    ];
+
+    const pronunciationScores = {};
+    const missedWordsByPassage = {};
+    let recognition = null;
+    let activeId = null;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    function getEnglishVoices() {
+        if (!("speechSynthesis" in window)) return [];
+        const all = window.speechSynthesis.getVoices();
+        const en = all.filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+        en.sort((a, b) => {
+            const scoreA = (a.name.includes("Natural") ? 2 : 0) + (a.name.includes("Google") ? 1 : 0);
+            const scoreB = (b.name.includes("Natural") ? 2 : 0) + (b.name.includes("Google") ? 1 : 0);
+            return scoreB - scoreA;
+        });
+        return en.length ? en : all;
+    }
+
+    const speakerProfiles = {
+        Carla:   { voiceIndex: 0, pitch: 1.12, rateOffset: 0.00 },
+        Sofía:   { voiceIndex: 0, pitch: 1.05, rateOffset: 0.02 },
+        Val:     { voiceIndex: 0, pitch: 1.15, rateOffset: -0.02 },
+        Elena:   { voiceIndex: 0, pitch: 1.08, rateOffset: 0.00 },
+        Mateo:   { voiceIndex: 1, pitch: 0.90, rateOffset: 0.00 },
+        Leo:     { voiceIndex: 1, pitch: 0.95, rateOffset: 0.02 },
+        Andrés:  { voiceIndex: 2, pitch: 0.85, rateOffset: -0.02 },
+        Sam:     { voiceIndex: 1, pitch: 0.88, rateOffset: 0.00 },
+        Mia:     { voiceIndex: 0, pitch: 1.18, rateOffset: 0.02 }
+    };
+
+    function stopAudio() {
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+        }
+    }
+
+    function speakText(text, rate = 0.95) {
+        if (!("speechSynthesis" in window)) {
+            alert("Tu navegador no soporta síntesis de voz.");
+            return;
+        }
+        window.speechSynthesis.cancel();
+        const voices = getEnglishVoices();
+        const utterance = new SpeechSynthesisUtterance(text);
+        if (voices.length > 0) utterance.voice = voices[0];
+        utterance.lang = "en-US";
+        utterance.rate = rate;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function playDialogueTurns(dialogueIndex, baseRate = 0.95) {
+        if (!("speechSynthesis" in window)) {
+            alert("Tu navegador no soporta síntesis de voz.");
+            return;
+        }
+        window.speechSynthesis.cancel();
+        const dialogue = listeningDialogues[dialogueIndex];
+        const voices = getEnglishVoices();
+
+        dialogue.turns.forEach((turn, idx) => {
+            const profile = speakerProfiles[turn.speaker] || { voiceIndex: idx, pitch: 1.0, rateOffset: 0 };
+            const utterance = new SpeechSynthesisUtterance(turn.line);
+            if (voices.length > 0) {
+                utterance.voice = voices[profile.voiceIndex % voices.length];
+            }
+            utterance.lang = "en-US";
+            utterance.pitch = profile.pitch;
+            utterance.rate = Math.max(0.65, baseRate + profile.rateOffset);
+            window.speechSynthesis.speak(utterance);
+        });
+    }
+
+    function speakWord(word) {
+        speakText(word, 0.85);
+    }
+
+    function renderSpeakingCards() {
+        const container = document.getElementById("speaking-container");
+        readingPassages.forEach(p => {
+            pronunciationScores[p.id] = 0;
+            missedWordsByPassage[p.id] = [];
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="badge">${p.title}</span>
+                    <span class="score-pill" id="score-${p.id}">Pronunciación: --%</span>
+                </div>
+                <div class="target-text">${p.text}</div>
+                <div class="controls">
+                    <button class="btn-rec" id="rec-${p.id}" onclick="startSpeech(${p.id})">🎤 Grabar</button>
+                    <button class="btn-stop" id="stop-${p.id}" onclick="stopSpeech(${p.id})" disabled>⏹️ Detener</button>
+                    <span class="live-status" id="status-${p.id}">Listo para grabar</span>
+                </div>
+                <div class="feedback-box" id="feedback-${p.id}"></div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function renderReadingQuestions() {
+        const container = document.getElementById("reading-container");
+        comprehensionQuestions.forEach((item, idx) => {
+            const row = document.createElement("div");
+            row.className = "question-row";
+            const optionsHtml = item.options.map(opt => `<option value="${opt}">${opt}</option>`).join("");
+            row.innerHTML = `
+                <strong>${item.q}</strong>
+                <select id="q-${idx}">
+                    <option value="">-- Selecciona la corrección o respuesta --</option>
+                    ${optionsHtml}
+                </select>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function renderDictationCards() {
+        const container = document.getElementById("dictation-container");
+        dictationSentences.forEach(item => {
+            const safeText = item.text.replace(/'/g, "\\'");
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="badge-listen">Oración ${item.id}</span>
+                    <span class="score-pill" id="dict-score-${item.id}">Dictado: --%</span>
+                </div>
+                <div class="controls">
+                    <button class="btn-play" onclick="speakText('${safeText}', 0.95)">🔊 Escuchar oración</button>
+                    <button class="btn-slow" onclick="speakText('${safeText}', 0.72)">🐢 Escuchar lento</button>
+                    <button class="btn-pause" onclick="stopAudio()">⏹️ Detener</button>
+                </div>
+                <input type="text" class="dictation-input" id="dict-input-${item.id}" placeholder="Escribe aquí exactamente lo que escuchas...">
+                <div class="feedback-box" id="dict-fb-${item.id}"></div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function renderDialogueQuestions() {
+        const container = document.getElementById("dialogues-container");
+        listeningDialogues.forEach((d, idx) => {
+            const row = document.createElement("div");
+            row.className = "question-row";
+            const optionsHtml = d.options.map(opt => `<option value="${opt}">${opt}</option>`).join("");
+            row.innerHTML = `
+                <div class="card-header" style="margin-bottom:4px;">
+                    <span class="badge-listen">${d.title}</span>
+                    <div class="controls">
+                        <button class="btn-play" onclick="playDialogueTurns(${idx}, 0.95)">🔊 Escuchar conversación</button>
+                        <button class="btn-slow" onclick="playDialogueTurns(${idx}, 0.75)">🐢 Lento</button>
+                        <button class="btn-pause" onclick="stopAudio()">⏹️ Detener</button>
+                    </div>
+                </div>
+                <strong>${d.question}</strong>
+                <select id="dlg-${idx}">
+                    <option value="">-- Selecciona la respuesta correcta --</option>
+                    ${optionsHtml}
+                </select>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function normalizeWords(str) {
+        return str
+            .toLowerCase()
+            .replace(/[^a-z0-9\s']/g, "")
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+    }
+
+    function evaluatePronunciation(passageId, originalText, spokenText) {
+        const targetWords = originalText.split(/\s+/);
+        const spokenList = normalizeWords(spokenText);
+        const spokenSet = new Set(spokenList);
+
+        let matchedCount = 0;
+        const missedList = [];
+
+        const highlighted = targetWords.map(rawWord => {
+            const clean = rawWord.toLowerCase().replace(/[^a-z0-9']/g, "");
+            if (!clean) return rawWord;
+            if (spokenSet.has(clean)) {
+                matchedCount++;
+                return `<span class="word-ok">${rawWord}</span>`;
+            } else {
+                missedList.push(rawWord.replace(/^[^a-zA-Z0-9']+|[^a-zA-Z0-9']+$/g, ""));
+                return `<span class="word-miss">${rawWord}</span>`;
+            }
+        });
+
+        missedWordsByPassage[passageId] = missedList;
+
+        const totalCleanWords = targetWords.filter(w => w.replace(/[^a-z0-9']/g, "").length > 0).length;
+        const accuracy = totalCleanWords > 0 ? (matchedCount / totalCleanWords) : 0;
+        pronunciationScores[passageId] = accuracy;
+
+        document.getElementById(`score-${passageId}`).innerText = `Pronunciación: ${Math.round(accuracy * 100)}%`;
+        const fb = document.getElementById(`feedback-${passageId}`);
+        fb.style.display = "block";
+        fb.innerHTML = `
+            <div><strong>Retroalimentación palabra por palabra:</strong> ${highlighted.join(" ")}</div>
+            <div class="heard-text"><strong>Reconocido por el sistema:</strong> "${spokenText || "No se detectó voz"}"</div>
+        `;
+    }
+
+    function evaluateDictation() {
+        let totalRatio = 0;
+
+        dictationSentences.forEach(item => {
+            const userInput = document.getElementById(`dict-input-${item.id}`).value.trim();
+            const targetWords = item.text.split(/\s+/);
+            const userSet = new Set(normalizeWords(userInput));
+
+            let matched = 0;
+            const highlighted = targetWords.map(rawWord => {
+                const clean = rawWord.toLowerCase().replace(/[^a-z0-9']/g, "");
+                if (!clean) return rawWord;
+                if (userSet.has(clean)) {
+                    matched++;
+                    return `<span class="word-ok">${rawWord}</span>`;
+                } else {
+                    return `<span class="word-miss">${rawWord}</span>`;
+                }
+            });
+
+            const cleanCount = targetWords.filter(w => w.replace(/[^a-z0-9']/g, "").length > 0).length;
+            const ratio = cleanCount > 0 ? (matched / cleanCount) : 0;
+            totalRatio += ratio;
+
+            document.getElementById(`dict-score-${item.id}`).innerText = `Dictado: ${Math.round(ratio * 100)}%`;
+            const fb = document.getElementById(`dict-fb-${item.id}`);
+            fb.style.display = "block";
+            fb.innerHTML = `
+                <div><strong>Texto esperado:</strong> ${highlighted.join(" ")}</div>
+                <div class="heard-text"><strong>Tu respuesta:</strong> "${userInput || "Sin respuesta"}"</div>
+            `;
+        });
+
+        return totalRatio / dictationSentences.length;
+    }
+
+    function startSpeech(id) {
+        stopAudio();
+        if (!SpeechRecognition) {
+            alert("Tu navegador no soporta reconocimiento de voz integrado. Usa Google Chrome o Microsoft Edge.");
+            return;
+        }
+        if (activeId !== null && activeId !== id) {
+            stopSpeech(activeId);
+        }
+
+        activeId = id;
+        let finalTranscript = "";
+
+        recognition = new SpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.interimResults = true;
+        recognition.continuous = true;
+
+        recognition.onresult = (event) => {
+            let interim = "";
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript + " ";
+                } else {
+                    interim += transcript;
+                }
+            }
+            document.getElementById(`status-${id}`).innerHTML = `<span class="recording-active">● Escuchando:</span> ${interim || finalTranscript}`;
+        };
+
+        recognition.onerror = (event) => {
+            document.getElementById(`status-${id}`).innerText = `Error de micrófono: ${event.error}`;
+        };
+
+        recognition.onend = () => {
+            const passage = readingPassages.find(p => p.id === id);
+            evaluatePronunciation(id, passage.text, finalTranscript.trim());
+            document.getElementById(`rec-${id}`).disabled = false;
+            document.getElementById(`stop-${id}`).disabled = true;
+            document.getElementById(`status-${id}`).innerText = "Evaluación completada";
+            activeId = null;
+        };
+
+        recognition.start();
+        document.getElementById(`rec-${id}`).disabled = true;
+        document.getElementById(`stop-${id}`).disabled = false;
+        document.getElementById(`status-${id}`).innerHTML = `<span class="recording-active">● Grabando... lee en voz alta</span>`;
+    }
+
+    function stopSpeech(id) {
+        if (recognition && activeId === id) {
+            recognition.stop();
+        }
+    }
+
+    function finishExam() {
+        stopAudio();
+        const studentName = document.getElementById("studentName").value.trim() || "Estudiante";
+
+        const avgSpeakingRatio = Object.values(pronunciationScores).reduce((a, b) => a + b, 0) / readingPassages.length;
+        const speakingPoints = avgSpeakingRatio * WEIGHT_SPEAKING;
+
+        let correctReading = 0;
+        comprehensionQuestions.forEach((item, idx) => {
+            const selected = document.getElementById(`q-${idx}`).value;
+            if (selected === item.answer) correctReading++;
+        });
+        const readingRatio = correctReading / comprehensionQuestions.length;
+        const readingPoints = readingRatio * WEIGHT_READING;
+
+        const dictationRatio = evaluateDictation();
+        let correctDialogues = 0;
+        listeningDialogues.forEach((d, idx) => {
+            const selected = document.getElementById(`dlg-${idx}`).value;
+            if (selected === d.answer) correctDialogues++;
+        });
+        const dialoguesRatio = correctDialogues / listeningDialogues.length;
+        const listeningRatio = (dictationRatio * 0.5) + (dialoguesRatio * 0.5);
+        const listeningPoints = listeningRatio * WEIGHT_LISTENING;
+
+        const finalGrade = (speakingPoints + readingPoints + listeningPoints).toFixed(1);
+
+        const allMissed = [];
+        const seen = new Set();
+        Object.values(missedWordsByPassage).forEach(list => {
+            list.forEach(w => {
+                const key = w.toLowerCase();
+                if (key && !seen.has(key)) {
+                    seen.add(key);
+                    allMissed.push(w);
+                }
+            });
+        });
+
+        let reviewHtml = "";
+        if (allMissed.length === 0) {
+            reviewHtml = `<p class="perfect-msg">¡Excelente trabajo! No se detectaron palabras pendientes de repaso en pronunciación.</p>`;
+        } else {
+            const buttonsHtml = allMissed
+                .map(word => `<button class="review-word-btn" onclick="speakWord('${word.replace(/'/g, "\\'")}')">🔊 ${word}</button>`)
+                .join("");
+            reviewHtml = `
+                <p><strong>Palabras para repasar (${allMissed.length}):</strong> Haz clic en cada palabra para escuchar su pronunciación en inglés:</p>
+                <div class="review-chips">${buttonsHtml}</div>
+            `;
+        }
+
+        const summary = document.getElementById("finalSummary");
+        summary.style.display = "block";
+        summary.innerHTML = `
+            <h3>Reporte Final — ${studentName}</h3>
+            <div class="grade-banner">
+                <div>Calificación Final (Escala 0.0 a 10.0)</div>
+                <div class="grade-number">${finalGrade} / 10.0</div>
+            </div>
+            <div class="grade-breakdown">
+                <div class="breakdown-item">
+                    <strong>Parte 1 (Pronunciación):</strong><br>
+                    ${speakingPoints.toFixed(2)} / ${WEIGHT_SPEAKING.toFixed(1)} pts (${Math.round(avgSpeakingRatio * 100)}%)
+                </div>
+                <div class="breakdown-item">
+                    <strong>Parte 2 (Comprensión):</strong><br>
+                    ${readingPoints.toFixed(2)} / ${WEIGHT_READING.toFixed(1)} pts (${correctReading}/${comprehensionQuestions.length} aciertos)
+                </div>
+                <div class="breakdown-item">
+                    <strong>Parte 3 (Listening):</strong><br>
+                    ${listeningPoints.toFixed(2)} / ${WEIGHT_LISTENING.toFixed(1)} pts<br>
+                    <small>Dictado: ${Math.round(dictationRatio * 100)}% | Diálogos: ${correctDialogues}/${listeningDialogues.length}</small>
+                </div>
+            </div>
+            <div class="review-section">
+                ${reviewHtml}
+            </div>
+        `;
+        summary.scrollIntoView({ behavior: "smooth" });
+    }
+
+    if ("speechSynthesis" in window) {
+        window.speechSynthesis.onvoiceschanged = () => getEnglishVoices();
+    }
+
+    renderSpeakingCards();
+    renderReadingQuestions();
+    renderDictationCards();
+    renderDialogueQuestions();
+</script>
+
+</body>
+</html>
+   
